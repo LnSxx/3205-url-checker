@@ -2,10 +2,14 @@ FROM node:22-alpine
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY tsconfig.base.json ./tsconfig.base.json
+COPY frontend/package*.json ./frontend/
+
+WORKDIR /app/frontend
+
 RUN npm install
 
-COPY . .
+COPY frontend ./
 
 EXPOSE 5173
 
