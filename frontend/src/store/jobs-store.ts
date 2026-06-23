@@ -105,7 +105,8 @@ export const useJobsStore = create<JobsState>((set, get) => ({
         isCreatingJob: false,
       });
 
-      await Promise.all([get().loadJobs(), get().loadJobDetails(response.jobId)]);
+      await get().loadJobDetails(response.jobId);
+      await get().loadJobs();
 
       return response.jobId;
     } catch (error) {
