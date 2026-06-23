@@ -1,9 +1,9 @@
 import './App.css';
-import { CreateJobForm } from './components/CreateJobForm';
-import { JobDetails } from './components/JobDetails';
-import { JobsList } from './components/JobsList';
-import { useActiveJobPolling } from './hooks/use-active-job-polling';
-import { useJobsStore } from './store/jobs-store';
+import { CreateJobForm } from '../components/CreateJobForm';
+import { JobDetails } from '../components/JobDetails';
+import { JobsList } from '../components/JobsList';
+import { useActiveJobPolling } from '../hooks/use-active-job-polling';
+import { useJobsStore } from '../store/jobs-store';
 
 function App() {
   useActiveJobPolling();
