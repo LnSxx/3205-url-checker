@@ -31,6 +31,7 @@ export class JobsService {
 
   cancel(id: string): JobDetails {
     this.jobsStore.requestCancellation(id);
+    this.jobsProcessor.cancel(id);
 
     return this.jobsStore.findDetailsById(id);
   }

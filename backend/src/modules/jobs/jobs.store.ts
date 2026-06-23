@@ -56,12 +56,14 @@ export class JobsStore {
   requestCancellation(id: string): Job {
     const job = this.findById(id);
 
-    job.cancelRequested = true;
-
-    if (job.status === JobStatus.Pending) {
-      job.status = JobStatus.Cancelled;
-      this.cancelPendingUrlChecks(job);
+    if (this.isFinalJobStatus(job.status)) {
+      return job;
     }
+
+    job.cancelRequested = true;
+    job.status = JobStatus.Cancelled;
+
+    this.cancelPendingUrlChecks(job);
 
     return job;
   }
@@ -218,5 +220,9 @@ export class JobsStore {
     }
 
     return new Date(urlCheck.finishedAt).getTime() - new Date(urlCheck.startedAt).getTime();
+  }
+
+  private isFinalJobStatus(status: JobStatus): boolean {
+    return [JobStatus.Completed, JobStatus.Cancelled, JobStatus.Failed].includes(status);
   }
 }

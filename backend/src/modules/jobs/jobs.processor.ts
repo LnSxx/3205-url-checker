@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { JobsStore } from './jobs.store';
 import { JobStatus } from './types/job-status.enum';
 import { Job, UrlCheck } from './types/job.types';
+import { UrlCheckStatus } from './types/url-check-status.enum';
 
 const MAX_CONCURRENT_URL_CHECKS = 5;
 const HEAD_REQUEST_TIMEOUT_MS = 10_000;
@@ -10,6 +11,7 @@ const MAX_RESULT_DELAY_MS = 10_000;
 @Injectable()
 export class JobsProcessor {
   private readonly logger = new Logger(JobsProcessor.name);
+  private readonly activeControllers = new Map<string, Set<AbortController>>();
 
   constructor(private readonly jobsStore: JobsStore) {}
 
@@ -21,6 +23,7 @@ export class JobsProcessor {
     }
 
     this.jobsStore.setJobStatus(job.id, JobStatus.InProgress);
+    this.activeControllers.set(job.id, new Set());
 
     try {
       await this.processWithConcurrencyLimit(job);
@@ -29,6 +32,7 @@ export class JobsProcessor {
       const stats = this.jobsStore.calculateStats(latestJob);
 
       if (latestJob.cancelRequested) {
+        this.jobsStore.cancelPendingUrlChecks(latestJob);
         this.jobsStore.setJobStatus(latestJob.id, JobStatus.Cancelled);
         return;
       }
@@ -37,8 +41,30 @@ export class JobsProcessor {
         this.jobsStore.setJobStatus(latestJob.id, JobStatus.Completed);
       }
     } catch (error) {
+      const latestJob = this.jobsStore.findById(job.id);
+
+      if (latestJob.cancelRequested) {
+        this.jobsStore.cancelPendingUrlChecks(latestJob);
+        this.jobsStore.setJobStatus(latestJob.id, JobStatus.Cancelled);
+        return;
+      }
+
       this.logger.error(`Failed to process job ${job.id}`, error);
       this.jobsStore.setJobStatus(job.id, JobStatus.Failed);
+    } finally {
+      this.activeControllers.delete(job.id);
+    }
+  }
+
+  cancel(jobId: string): void {
+    const controllers = this.activeControllers.get(jobId);
+
+    if (!controllers) {
+      return;
+    }
+
+    for (const controller of controllers) {
+      controller.abort();
     }
   }
 
@@ -47,19 +73,25 @@ export class JobsProcessor {
 
     const workers = Array.from({ length: MAX_CONCURRENT_URL_CHECKS }, async () => {
       while (currentIndex < job.urls.length) {
-        if (job.cancelRequested) {
-          this.jobsStore.cancelPendingUrlChecks(job);
+        const latestJob = this.jobsStore.findById(job.id);
+
+        if (latestJob.cancelRequested) {
+          this.jobsStore.cancelPendingUrlChecks(latestJob);
           return;
         }
 
-        const urlCheck = job.urls[currentIndex];
+        const urlCheck = latestJob.urls[currentIndex];
         currentIndex += 1;
 
         if (!urlCheck) {
           return;
         }
 
-        await this.processUrl(job.id, urlCheck);
+        if (urlCheck.status !== UrlCheckStatus.Pending) {
+          continue;
+        }
+
+        await this.processUrl(latestJob.id, urlCheck);
       }
     });
 
@@ -67,12 +99,29 @@ export class JobsProcessor {
   }
 
   private async processUrl(jobId: string, urlCheck: UrlCheck): Promise<void> {
+    const job = this.jobsStore.findById(jobId);
+
+    if (job.cancelRequested) {
+      this.jobsStore.markUrlCancelled(jobId, urlCheck.id);
+      return;
+    }
+
     this.jobsStore.markUrlInProgress(jobId, urlCheck.id);
 
     try {
-      const response = await this.head(urlCheck.url);
+      const response = await this.head(jobId, urlCheck.url);
 
-      await this.delay(this.getRandomResultDelayMs());
+      if (this.jobsStore.findById(jobId).cancelRequested) {
+        this.jobsStore.markUrlCancelled(jobId, urlCheck.id);
+        return;
+      }
+
+      const shouldSaveResult = await this.delayBeforeSavingResult(jobId);
+
+      if (!shouldSaveResult) {
+        this.jobsStore.markUrlCancelled(jobId, urlCheck.id);
+        return;
+      }
 
       if (response.status >= 400) {
         this.jobsStore.markUrlError(
@@ -86,14 +135,28 @@ export class JobsProcessor {
 
       this.jobsStore.markUrlSuccess(jobId, urlCheck.id, response.status);
     } catch (error) {
-      await this.delay(this.getRandomResultDelayMs());
+      if (this.jobsStore.findById(jobId).cancelRequested) {
+        this.jobsStore.markUrlCancelled(jobId, urlCheck.id);
+        return;
+      }
+
+      const shouldSaveResult = await this.delayBeforeSavingResult(jobId);
+
+      if (!shouldSaveResult) {
+        this.jobsStore.markUrlCancelled(jobId, urlCheck.id);
+        return;
+      }
 
       this.jobsStore.markUrlError(jobId, urlCheck.id, this.getErrorMessage(error));
     }
   }
 
-  private async head(url: string): Promise<Response> {
+  private async head(jobId: string, url: string): Promise<Response> {
     const controller = new AbortController();
+    const controllers = this.activeControllers.get(jobId);
+
+    controllers?.add(controller);
+
     const timeout = setTimeout(() => {
       controller.abort();
     }, HEAD_REQUEST_TIMEOUT_MS);
@@ -106,6 +169,7 @@ export class JobsProcessor {
       });
     } finally {
       clearTimeout(timeout);
+      controllers?.delete(controller);
     }
   }
 
@@ -125,5 +189,20 @@ export class JobsProcessor {
     }
 
     return 'Unknown error';
+  }
+
+  private async delayBeforeSavingResult(jobId: string): Promise<boolean> {
+    const delayMs = this.getRandomResultDelayMs();
+    const startedAt = Date.now();
+
+    while (Date.now() - startedAt < delayMs) {
+      if (this.jobsStore.findById(jobId).cancelRequested) {
+        return false;
+      }
+
+      await this.delay(100);
+    }
+
+    return true;
   }
 }
