@@ -1,4 +1,4 @@
-import { JobSummary } from '../domain/job-summary.model';
+import { JobSummary } from '../domain/models/job-summary.model';
 import { JobSummaryResponseDto } from '../dto/response/job-summary-response.dto';
 
 export function toJobSummaryResponseDto(job: JobSummary): JobSummaryResponseDto {

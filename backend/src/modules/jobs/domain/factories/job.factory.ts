@@ -1,9 +1,9 @@
 import { randomUUID } from 'crypto';
-import { CreateJobParams } from './create-job.params';
-import { JobStatus } from '../domain/job-status.enum';
-import { Job } from '../domain/job.model';
-import { UrlCheck } from '../domain/url-check.model';
-import { UrlCheckStatus } from '../domain/url-check-status.enum';
+import { CreateJobParams } from '../../application/create-job.params';
+import { JobStatus } from '../enums/job-status.enum';
+import { Job } from '../models/job.model';
+import { UrlCheck } from '../models/url-check.model';
+import { UrlCheckStatus } from '../enums/url-check-status.enum';
 
 export function createJob(params: CreateJobParams): Job {
   return {

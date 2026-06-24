@@ -1,4 +1,4 @@
-import { JobStatus } from '../../domain/job-status.enum';
+import { JobStatus } from '../../domain/enums/job-status.enum';
 
 export class JobSummaryResponseDto {
   id!: string;

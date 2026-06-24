@@ -1,4 +1,4 @@
-import { UrlCheckStatus } from './url-check-status.enum';
+import { UrlCheckStatus } from '../enums/url-check-status.enum';
 
 export interface UrlCheck {
   id: string;

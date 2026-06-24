@@ -1,4 +1,4 @@
-import { JobDetails } from '../domain/job-details.model';
+import { JobDetails } from '../domain/models/job-details.model';
 import { JobDetailsResponseDto } from '../dto/response/job-details-response.dto';
 import { toUrlCheckResponseDto } from './url-check-mapper';
 

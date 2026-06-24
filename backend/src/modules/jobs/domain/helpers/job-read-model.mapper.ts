@@ -1,6 +1,6 @@
-import { JobDetails } from '../domain/job-details.model';
-import { JobSummary } from '../domain/job-summary.model';
-import { Job } from '../domain/job.model';
+import { JobDetails } from '../models/job-details.model';
+import { JobSummary } from '../models/job-summary.model';
+import { Job } from '../models/job.model';
 import { calculateJobStats } from './job-stats.utils';
 
 export function toJobSummary(job: Job): JobSummary {

@@ -1,4 +1,4 @@
-import { UrlCheck } from '../domain/url-check.model';
+import { UrlCheck } from '../models/url-check.model';
 
 export function calculateUrlCheckDurationMs(urlCheck: UrlCheck): number | undefined {
   if (!urlCheck.startedAt || !urlCheck.finishedAt) {

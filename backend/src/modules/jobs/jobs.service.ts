@@ -3,8 +3,8 @@ import { JobsProcessor } from './jobs.processor';
 import { JobsStore } from './jobs.store';
 import { CreateJobParams } from './application/create-job.params';
 import { CreateJobResult } from './application/create-job.result';
-import { JobSummary } from './domain/job-summary.model';
-import { JobDetails } from './domain/job-details.model';
+import { JobSummary } from './domain/models/job-summary.model';
+import { JobDetails } from './domain/models/job-details.model';
 
 @Injectable()
 export class JobsService {

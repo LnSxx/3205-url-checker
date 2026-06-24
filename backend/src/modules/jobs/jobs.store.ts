@@ -1,15 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { JobStatus } from './domain/job-status.enum';
-import { Job } from './domain/job.model';
+import { JobStatus } from './domain/enums/job-status.enum';
+import { Job } from './domain/models/job.model';
 import { CreateJobParams } from './application/create-job.params';
-import { JobSummary } from './domain/job-summary.model';
-import { UrlCheck } from './domain/url-check.model';
-import { UrlCheckStatus } from './domain/url-check-status.enum';
-import { JobDetails } from './domain/job-details.model';
-import { createJob } from './application/job.factory';
-import { toJobDetails, toJobSummary } from './application/job-read-model.mapper';
-import { isFinalJobStatus } from './application/job-status.utils';
-import { calculateUrlCheckDurationMs } from './application/url-check.utils';
+import { JobSummary } from './domain/models/job-summary.model';
+import { UrlCheck } from './domain/models/url-check.model';
+import { UrlCheckStatus } from './domain/enums/url-check-status.enum';
+import { JobDetails } from './domain/models/job-details.model';
+import { createJob } from './domain/factories/job.factory';
+import { toJobDetails, toJobSummary } from './domain/helpers/job-read-model.mapper';
+import { isFinalJobStatus } from './domain/helpers/job-status.utils';
+import { calculateUrlCheckDurationMs } from './domain/helpers/url-check.utils';
 
 @Injectable()
 export class JobsStore {

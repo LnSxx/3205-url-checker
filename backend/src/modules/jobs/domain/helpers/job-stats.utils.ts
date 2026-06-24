@@ -1,6 +1,6 @@
-import { JobStats } from '../domain/job-stats.model';
-import { Job } from '../domain/job.model';
-import { UrlCheckStatus } from '../domain/url-check-status.enum';
+import { JobStats } from '../models/job-stats.model';
+import { Job } from '../models/job.model';
+import { UrlCheckStatus } from '../enums/url-check-status.enum';
 
 export function calculateJobStats(job: Job): JobStats {
   const stats: JobStats = {
