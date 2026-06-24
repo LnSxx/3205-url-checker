@@ -1,9 +1,9 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import { CreateJobDto } from './dto/create-job.dto';
+import { CreateJobDto } from './dto/request/create-job.dto';
 import { JobsService } from './jobs.service';
-import { CreateJobResponseDto } from './dto/create-job-response.dto';
-import { JobSummaryResponseDto } from './dto/job-summary-response.dto';
-import { JobDetailsResponseDto } from './dto/job-details-response.dto';
+import { CreateJobResponseDto } from './dto/response/create-job-response.dto';
+import { JobSummaryResponseDto } from './dto/response/job-summary-response.dto';
+import { JobDetailsResponseDto } from './dto/response/job-details-response.dto';
 import { toJobSummaryResponseDto } from './mappers/job-summary-mapper';
 import { toJobDetailsResponseDto } from './mappers/job-details-mapper';
 

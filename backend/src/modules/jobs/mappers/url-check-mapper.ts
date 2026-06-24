@@ -1,5 +1,5 @@
-import { UrlCheckResponseDto } from '../dto/url-check-response.dto';
-import { UrlCheck } from '../types/url-check';
+import { UrlCheck } from '../domain/url-check.model';
+import { UrlCheckResponseDto } from '../dto/response/url-check-response.dto';
 
 export function toUrlCheckResponseDto(urlCheck: UrlCheck): UrlCheckResponseDto {
   return {

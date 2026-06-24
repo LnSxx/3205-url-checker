@@ -1,5 +1,5 @@
-import { JobDetailsResponseDto } from '../dto/job-details-response.dto';
-import { JobDetails } from '../types/job-details';
+import { JobDetails } from '../domain/job-details.model';
+import { JobDetailsResponseDto } from '../dto/response/job-details-response.dto';
 import { toUrlCheckResponseDto } from './url-check-mapper';
 
 export function toJobDetailsResponseDto(job: JobDetails): JobDetailsResponseDto {

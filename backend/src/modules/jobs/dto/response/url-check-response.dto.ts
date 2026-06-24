@@ -1,4 +1,4 @@
-import { UrlCheckStatus } from '../types/enums/url-check-status.enum';
+import { UrlCheckStatus } from '../../domain/url-check-status.enum';
 
 export class UrlCheckResponseDto {
   id!: string;

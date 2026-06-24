@@ -1,5 +1,5 @@
-import { JobStatus } from './enums/job-status.enum';
-import { UrlCheck } from './url-check';
+import { JobStatus } from './job-status.enum';
+import { UrlCheck } from './url-check.model';
 
 export interface JobDetails {
   id: string;

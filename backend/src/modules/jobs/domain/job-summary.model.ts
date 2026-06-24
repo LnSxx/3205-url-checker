@@ -1,4 +1,4 @@
-import { JobStatus } from './enums/job-status.enum';
+import { JobStatus } from './job-status.enum';
 
 export interface JobSummary {
   id: string;

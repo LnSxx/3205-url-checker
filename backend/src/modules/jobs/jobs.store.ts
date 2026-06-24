@@ -1,19 +1,19 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
-import { JobStatus } from './types/enums/job-status.enum';
-import { UrlCheckStatus } from './types/enums/url-check-status.enum';
-import { Job } from './types/job';
-import { CreateJobCommand } from './types/create-job.types';
-import { JobSummary } from './types/job-summary';
-import { JobDetails } from './types/job-details';
-import { UrlCheck } from './types/url-check';
-import { JobStats } from './types/job-stats';
+import { JobStatus } from './domain/job-status.enum';
+import { Job } from './domain/job.model';
+import { CreateJobParams } from './application/create-job.params';
+import { JobSummary } from './domain/job-summary.model';
+import { UrlCheck } from './domain/url-check.model';
+import { UrlCheckStatus } from './domain/url-check-status.enum';
+import { JobStats } from './domain/job-stats.model';
+import { JobDetails } from './domain/job-details.model';
 
 @Injectable()
 export class JobsStore {
   private readonly jobs = new Map<string, Job>();
 
-  create(dto: CreateJobCommand): Job {
+  create(dto: CreateJobParams): Job {
     const now = new Date().toISOString();
 
     const job: Job = {
