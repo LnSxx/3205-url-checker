@@ -1,7 +1,8 @@
-import type { UrlCheck } from '../api/types';
 import { isFinalJobStatus, useJobsStore } from '../store/jobs-store';
+import Stat from './Stat';
+import UrlCheckRow from './UrlCheckRow';
 
-export function JobDetails() {
+export default function JobDetails() {
   const activeJob = useJobsStore((state) => state.activeJob);
   const isLoadingActiveJob = useJobsStore((state) => state.isLoadingActiveJob);
   const isCancellingJob = useJobsStore((state) => state.isCancellingJob);
@@ -10,9 +11,10 @@ export function JobDetails() {
   if (!activeJob) {
     return (
       <section className="panel details-panel">
-        <h2>Job details</h2>
         <p className="muted">
-          {isLoadingActiveJob ? 'Loading job...' : 'Select a job to see details.'}
+          {isLoadingActiveJob
+            ? 'Загрузка задачи...'
+            : 'Выберите задачу из списка слева или создайте новую.'}
         </p>
       </section>
     );
@@ -24,7 +26,7 @@ export function JobDetails() {
     <section className="panel details-panel">
       <div className="panel-header">
         <div>
-          <h2>Job details</h2>
+          <h2>Детали задачи</h2>
           <p className="mono">{activeJob.id}</p>
         </div>
 
@@ -33,7 +35,7 @@ export function JobDetails() {
           disabled={!canCancel || isCancellingJob}
           onClick={() => void cancelActiveJob()}
         >
-          {isCancellingJob ? 'Cancelling...' : 'Cancel job'}
+          {isCancellingJob ? 'Отмена...' : 'Отменить задачу'}
         </button>
       </div>
 
@@ -51,44 +53,5 @@ export function JobDetails() {
         ))}
       </div>
     </section>
-  );
-}
-
-interface StatProps {
-  label: string;
-  value: string | number;
-  status?: string;
-}
-
-function Stat({ label, value, status }: StatProps) {
-  return (
-    <div className="stat-card">
-      <span>{label}</span>
-      {status ? <strong className={`status ${status}`}>{value}</strong> : <strong>{value}</strong>}
-    </div>
-  );
-}
-
-interface UrlCheckRowProps {
-  urlCheck: UrlCheck;
-}
-
-function UrlCheckRow({ urlCheck }: UrlCheckRowProps) {
-  return (
-    <article className="url-card">
-      <div>
-        <strong>{urlCheck.url}</strong>
-        <p className="muted">
-          {urlCheck.durationMs !== undefined ? `${urlCheck.durationMs} ms` : 'Not finished'}
-        </p>
-      </div>
-
-      <div className="url-meta">
-        <span className={`status ${urlCheck.status}`}>{urlCheck.status}</span>
-
-        {urlCheck.httpStatus !== undefined ? <span>HTTP {urlCheck.httpStatus}</span> : null}
-        {urlCheck.errorMessage ? <span className="error-text">{urlCheck.errorMessage}</span> : null}
-      </div>
-    </article>
   );
 }

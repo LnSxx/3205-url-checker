@@ -30,8 +30,8 @@ export function CreateJobForm() {
     <form className="panel" onSubmit={handleSubmit}>
       <div className="panel-header">
         <div>
-          <h2>Create job</h2>
-          <p>Enter one URL per line.</p>
+          <h2>Создать задачу</h2>
+          <p>Введите каждый URL с новой строки</p>
         </div>
       </div>
 
@@ -45,7 +45,7 @@ export function CreateJobForm() {
       <div className="panel-footer">
         <span className="counter">{urls.length} URLs</span>
         <button type="submit" disabled={isCreatingJob || urls.length === 0}>
-          {isCreatingJob ? 'Creating...' : 'Start checking'}
+          {isCreatingJob ? 'Создание...' : 'Начать проверку'}
         </button>
       </div>
     </form>

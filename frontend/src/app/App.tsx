@@ -1,9 +1,9 @@
 import './App.css';
 import { CreateJobForm } from '../components/CreateJobForm';
-import { JobDetails } from '../components/JobDetails';
-import { JobsList } from '../components/JobsList';
 import { useActiveJobPolling } from '../hooks/use-active-job-polling';
 import { useJobsStore } from '../store/jobs-store';
+import JobDetails from '../components/JobDetails';
+import JobsList from '../components/JobsList';
 
 function App() {
   useActiveJobPolling();
@@ -15,10 +15,11 @@ function App() {
     <main id="app-shell">
       <header id="app-header">
         <div>
-          <p className="eyebrow">Fullstack URL checker</p>
-          <h1>Asynchronous URL checking service</h1>
+          <p className="eyebrow">Тестовое задание для 3205.team</p>
+          <h2>Сервис асинхронной проверки списка URL</h2>
           <p className="lead">
-            Create jobs, track URL checks, inspect results, and cancel running jobs.
+            Бекенд написан на TypeScript с использованием NestJS, фронтенд на React с использованием
+            Vite. Стор - Zustand.
           </p>
         </div>
       </header>
@@ -27,7 +28,7 @@ function App() {
         <div className="error-banner">
           <span>{error}</span>
           <button type="button" onClick={clearError}>
-            Dismiss
+            Скрыть
           </button>
         </div>
       ) : null}
