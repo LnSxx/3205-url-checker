@@ -1,4 +1,5 @@
-import { isFinalJobStatus, useJobsStore } from '../store/jobs-store';
+import { isFinalJobStatus } from '../helpers/job-status-helper';
+import { useJobsStore } from '../store/jobs-store';
 import Stat from './Stat';
 import UrlCheckRow from './UrlCheckRow';
 
@@ -39,12 +40,16 @@ export default function JobDetails() {
         </button>
       </div>
 
+      <div>
+        <span className="muted">Текущий статус: </span>
+        <span className={`status ${activeJob.status}`}>{activeJob.status}</span>
+      </div>
+
       <div className="stats-grid">
-        <Stat label="Status" value={activeJob.status} status={activeJob.status} />
-        <Stat label="Progress" value={`${activeJob.processed}/${activeJob.total}`} />
-        <Stat label="Success" value={activeJob.success} />
-        <Stat label="Error" value={activeJob.error} />
-        <Stat label="Cancelled" value={activeJob.cancelled} />
+        <Stat label="Проверено" value={`${activeJob.processed}/${activeJob.total}`} />
+        <Stat label="Успешно" value={activeJob.success} />
+        <Stat label="Ошибки" value={activeJob.error} />
+        <Stat label="Отменено" value={activeJob.cancelled} />
       </div>
 
       <div className="url-list">

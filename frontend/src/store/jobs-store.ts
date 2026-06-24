@@ -1,6 +1,6 @@
 import { create } from 'zustand';
-import { cancelJob, createJob, getJob, getJobs } from '../api/jobs-api';
-import type { JobDetails, JobSummary, JobStatus } from '../api/types';
+import type { JobDetails, JobSummary } from '../api/jobs.types';
+import { cancelJobRequest, createJobRequest, getJobRequest, getJobsRequest } from '../api/jobs-api';
 
 interface JobsState {
   jobs: JobSummary[];
@@ -41,7 +41,7 @@ export const useJobsStore = create<JobsState>((set, get) => ({
     });
 
     try {
-      const jobs = await getJobs();
+      const jobs = await getJobsRequest();
 
       set({
         jobs,
@@ -62,7 +62,7 @@ export const useJobsStore = create<JobsState>((set, get) => ({
     });
 
     try {
-      const job = await getJob(jobId);
+      const job = await getJobRequest(jobId);
 
       const { activeJobId } = get();
 
@@ -97,7 +97,7 @@ export const useJobsStore = create<JobsState>((set, get) => ({
     });
 
     try {
-      const response = await createJob({ urls });
+      const response = await createJobRequest({ urls });
 
       set({
         activeJobId: response.jobId,
@@ -142,7 +142,7 @@ export const useJobsStore = create<JobsState>((set, get) => ({
     });
 
     try {
-      const cancelledJob = await cancelJob(activeJobId);
+      const cancelledJob = await cancelJobRequest(activeJobId);
 
       const { activeJobId: latestActiveJobId } = get();
 
@@ -171,10 +171,6 @@ export const useJobsStore = create<JobsState>((set, get) => ({
     });
   },
 }));
-
-export function isFinalJobStatus(status: JobStatus): boolean {
-  return ['completed', 'cancelled', 'failed'].includes(status);
-}
 
 function getErrorMessage(error: unknown): string {
   if (error instanceof Error) {

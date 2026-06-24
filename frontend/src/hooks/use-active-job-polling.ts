@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
-import { isFinalJobStatus, useJobsStore } from '../store/jobs-store';
+import { useJobsStore } from '../store/jobs-store';
+import { isFinalJobStatus } from '../helpers/job-status-helper';
 
 const POLLING_INTERVAL_MS = 1_000;
 

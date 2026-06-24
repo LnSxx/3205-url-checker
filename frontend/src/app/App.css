@@ -193,6 +193,7 @@
 .stat-card {
   display: flex;
   min-height: 82px;
+  min-width: 0;
   flex-direction: column;
   justify-content: space-between;
   gap: 8px;

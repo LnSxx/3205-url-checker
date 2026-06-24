@@ -1,4 +1,4 @@
-import type { CreateJobRequest, CreateJobResponse, JobDetails, JobSummary } from './types';
+import type { CreateJobRequest, CreateJobResponse, JobDetails, JobSummary } from './jobs.types';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3000';
 
@@ -30,22 +30,22 @@ async function getErrorMessage(response: Response): Promise<string> {
   }
 }
 
-export function createJob(payload: CreateJobRequest): Promise<CreateJobResponse> {
+export function createJobRequest(payload: CreateJobRequest): Promise<CreateJobResponse> {
   return request<CreateJobResponse>('/jobs', {
     method: 'POST',
     body: JSON.stringify(payload),
   });
 }
 
-export function getJobs(): Promise<JobSummary[]> {
+export function getJobsRequest(): Promise<JobSummary[]> {
   return request<JobSummary[]>('/jobs');
 }
 
-export function getJob(jobId: string): Promise<JobDetails> {
+export function getJobRequest(jobId: string): Promise<JobDetails> {
   return request<JobDetails>(`/jobs/${jobId}`);
 }
 
-export function cancelJob(jobId: string): Promise<JobDetails> {
+export function cancelJobRequest(jobId: string): Promise<JobDetails> {
   return request<JobDetails>(`/jobs/${jobId}`, {
     method: 'DELETE',
   });

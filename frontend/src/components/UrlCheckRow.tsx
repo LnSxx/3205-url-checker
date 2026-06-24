@@ -1,4 +1,4 @@
-import type { UrlCheck } from '../api/types';
+import type { UrlCheck } from '../api/jobs.types';
 
 interface UrlCheckRowProps {
   urlCheck: UrlCheck;

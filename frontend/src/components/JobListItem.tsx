@@ -1,4 +1,4 @@
-import type { JobSummary } from '../api/types';
+import type { JobSummary } from '../api/jobs.types';
 
 interface JobListItemProps {
   job: JobSummary;
