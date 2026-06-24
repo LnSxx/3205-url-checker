@@ -5,10 +5,11 @@ import { Job } from './domain/models/job.model';
 import { UrlCheckStatus } from './domain/enums/url-check-status.enum';
 import { UrlCheck } from './domain/models/url-check.model';
 import { calculateJobStats } from './domain/helpers/job-stats.utils';
-
-const MAX_CONCURRENT_URL_CHECKS = 5;
-const HEAD_REQUEST_TIMEOUT_MS = 10_000;
-const MAX_RESULT_DELAY_MS = 10_000;
+import {
+  HEAD_REQUEST_TIMEOUT_MS,
+  MAX_CONCURRENT_URL_CHECKS,
+  MAX_RESULT_DELAY_MS,
+} from './jobs.constants';
 
 @Injectable()
 export class JobsProcessor {

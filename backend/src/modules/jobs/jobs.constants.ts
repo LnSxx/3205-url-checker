@@ -1,0 +1,3 @@
+export const MAX_CONCURRENT_URL_CHECKS = 5;
+export const HEAD_REQUEST_TIMEOUT_MS = 10_000;
+export const MAX_RESULT_DELAY_MS = 10_000;
