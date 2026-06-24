@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { CreateJobDto } from './dto/create-job.dto';
 import { JobsProcessor } from './jobs.processor';
 import { JobsStore } from './jobs.store';
-import { JobDetails, JobSummary } from './types/job.types';
+import { CreateJobCommand, CreateJobResult } from './types/create-job.types';
+import { JobSummary } from './types/job-summary';
+import { JobDetails } from './types/job-details';
 
 @Injectable()
 export class JobsService {
@@ -11,8 +12,8 @@ export class JobsService {
     private readonly jobsProcessor: JobsProcessor,
   ) {}
 
-  create(dto: CreateJobDto): { jobId: string } {
-    const job = this.jobsStore.create(dto);
+  create(params: CreateJobCommand): CreateJobResult {
+    const job = this.jobsStore.create(params);
 
     void this.jobsProcessor.process(job.id);
 

@@ -1,8 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { JobsStore } from './jobs.store';
-import { JobStatus } from './types/job-status.enum';
-import { Job, UrlCheck } from './types/job.types';
-import { UrlCheckStatus } from './types/url-check-status.enum';
+import { JobStatus } from './types/enums/job-status.enum';
+import { UrlCheckStatus } from './types/enums/url-check-status.enum';
+import { Job } from './types/job';
+import { UrlCheck } from './types/url-check';
 
 const MAX_CONCURRENT_URL_CHECKS = 5;
 const HEAD_REQUEST_TIMEOUT_MS = 10_000;
